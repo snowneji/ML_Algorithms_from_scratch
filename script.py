@@ -103,12 +103,11 @@ if __name__ =='__main__':
 
 
 
-
+	# Layer 3: 64 -> 128 feature map
 	W_conv3 = tf.Variable(tf.truncated_normal([5,5,64,128],stddev=0.01))  #weight
 	b_conv3 = tf.Variable(tf.constant(0.01,shape=[128])) #bias
 	conv3 = tf.nn.conv2d(pool2,W_conv3,strides=[1,1,1,1],padding='SAME') #Convolution
 	relu2 = tf.nn.relu(conv3+b_conv3) # relu transform
-	#image_size: 7
 
 
 
@@ -118,10 +117,11 @@ if __name__ =='__main__':
 
 
 
-	#Dense Layer:
-	# each image now become [7,7,64]
-	# to dense it: it now because 7*7*64
-	# let's set: 7*7*64  -> 1024 for dense layer
+
+	#Dense Layer 1:
+	# each image now become [7,7,128]
+	# to dense it: it now because 7*7*128
+	# let's set: 7*7*128  -> 1024 for dense layer
 
 	
 	flat_pool2 = tf.reshape(relu2,[-1,7*7*128])#Flatten
@@ -138,6 +138,11 @@ if __name__ =='__main__':
 
 
 
+
+
+	#Dense Layer 2:
+
+	# let's set:  1024 -> 512
 	
 
 	W_fc2 = tf.Variable(tf.truncated_normal([1024,512],stddev=0.01)) 
@@ -164,6 +169,7 @@ if __name__ =='__main__':
 
 
 	## Softmax to get result:
+	# 512 -> 10
 	W_fc3 = tf.Variable(tf.truncated_normal([512,N_CLASS],stddev=0.01)) 
 	b_fc3 = tf.Variable(tf.constant(0.01,shape=[N_CLASS])) #bias
 	softmax_res = tf.matmul(drop2,W_fc3)+b_fc3
@@ -171,7 +177,7 @@ if __name__ =='__main__':
 
 
 
-	## Add Opt algo
+	## Add Optimization algo
 	cross_entr = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_,logits=y)) #-tf.reduce_sum(y_*tf.log(y)) #Cost
 	train_step = tf.train.AdamOptimizer(LEARNING_RATE).minimize(cross_entr)
 
@@ -197,7 +203,7 @@ if __name__ =='__main__':
 	index_in_epoch = 0
 	num_examples = train_dat.shape[0]
 
-
+	# Next Batch Helper Function:
 	def next_batch(batch_size):
 		global train_dat
 		global train_label
