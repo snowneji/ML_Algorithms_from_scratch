@@ -1,6 +1,4 @@
 # DeepLearning Learning Scripts
 
- - tf_MNIST.py: CNN on MNIST data using Tensorflow
+ - tf_MNIST.py: ConvNet on MNIST data using Tensorflow.
 
-
-Learning by Coding =)
