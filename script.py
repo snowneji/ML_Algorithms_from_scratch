@@ -10,30 +10,6 @@ def OHE(label,nclass):
 	return label_dat
 
 
-def next_batch(batch_size):
-	global train_dat
-	global train_label
-	global index_in_epoch
-	global epochs_completed
-
-	start = index_in_epoch
-	index_in_epoch += batch_size
-
-	# if index exceed the length of data, shuffle the data and continue:
-	if index_in_epoch > num_examples:
-		epochs_completed += 1
-		permu = np.random.permutation(num_examples)
-		train_dat = train_dat[permu,:]
-		train_label = train_label[permu,:]
-		# Begin next epoch:
-		start = 0 # reset start counter
-		index_in_epoch = 0 # reset index counter
-		index_in_epoch += batch_size # update
-		assert batch_size <= num_examples #check point
-
-	end = index_in_epoch
-	return(train_mat[start:end,:], train_label[start:end,:])
-
 
 
 if __name__ =='__main__':
@@ -191,12 +167,12 @@ if __name__ =='__main__':
 	W_fc3 = tf.Variable(tf.truncated_normal([512,N_CLASS],stddev=0.01)) 
 	b_fc3 = tf.Variable(tf.constant(0.01,shape=[N_CLASS])) #bias
 	softmax_res = tf.matmul(drop2,W_fc3)+b_fc3
-	y = tf.nn.softmax(softmax_res)
+	y = softmax_res#tf.nn.softmax(softmax_res)
 
 
 
 	## Add Opt algo
-	cross_entr = -tf.reduce_sum(y_*tf.log(y)) #Cost
+	cross_entr = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_,logits=y)) #-tf.reduce_sum(y_*tf.log(y)) #Cost
 	train_step = tf.train.AdamOptimizer(LEARNING_RATE).minimize(cross_entr)
 
 
@@ -220,6 +196,32 @@ if __name__ =='__main__':
 	epochs_completed = 0
 	index_in_epoch = 0
 	num_examples = train_dat.shape[0]
+
+
+	def next_batch(batch_size):
+		global train_dat
+		global train_label
+		global index_in_epoch
+		global epochs_completed
+
+		start = index_in_epoch
+		index_in_epoch += batch_size
+
+		# if index exceed the length of data, shuffle the data and continue:
+		if index_in_epoch > num_examples:
+			epochs_completed += 1
+			# permu = np.random.permutation(num_examples)
+			# train_dat = train_dat[permu,:]
+			# train_label = train_label[permu,:]
+			# Begin next epoch:
+			start = 0 # reset start counter
+			index_in_epoch = 0 # reset index counter
+			index_in_epoch += batch_size # update
+			assert batch_size <= num_examples #check point
+
+		end = index_in_epoch
+		return(train_dat[start:end,:], train_label[start:end,:])
+
 
 
 
