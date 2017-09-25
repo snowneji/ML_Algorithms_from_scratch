@@ -21,9 +21,10 @@ examles_to_show = 10
 
 
 # Architecture pars:
+n_input = 28*28
 n_h1 = 256
 n_h2 = 128
-n_input = 28*28
+
 
 
 # Input:
@@ -99,7 +100,7 @@ with tf.Session() as sess:
 
 		# New Image:
 		for k in range(n):
-			recn[i*28:(i+1)*28, j*28:(j+1)*28] = res[j].reshape([28,28])
+			recn[i*28:(i+1)*28, k*28:(k+1)*28] = res[k].reshape([28,28])
 
 
 	print('Original Image:')
