@@ -14,15 +14,15 @@ def OHE(label,nclass):
 
 if __name__ =='__main__':
 	# Load data:
-	train = pd.read_csv('/home/snowneji/kg_mnist/train.csv')
-	test = pd.read_csv('/home/snowneji/kg_mnist/test.csv')
+	train = pd.read_csv('/home/snowneji/MNIST/train.csv')
+	test = pd.read_csv('/home/snowneji/MNIST/test.csv')
 
 
 	IMAGE_SIZE = int(np.sqrt(test.shape[1])) # Image size
 	SPLIT_SIZE = 0.2  # Train Vali Ratio
 	N_CLASS = 10
 	LEARNING_RATE = 0.001
-	TRAINING_ITER = 10000
+	TRAINING_ITER = 5000
 	BATCH_SIZE = 50
 	VALIDATION_SIZE = 2000
 
@@ -35,10 +35,10 @@ if __name__ =='__main__':
 
 
 	#visualize a random image:
-	ind = np.random.randint(0,len(train_mat))
-	rand_img = train_mat[ind,:].reshape(IMAGE_SIZE,IMAGE_SIZE)
-	imshow(rand_img)
-	print(label[ind])
+	# ind = np.random.randint(0,len(train_mat))
+	# rand_img = train_mat[ind,:].reshape(IMAGE_SIZE,IMAGE_SIZE)
+	# imshow(rand_img)
+	# print(label[ind])
 
 
 	#normalize the data:
@@ -282,11 +282,31 @@ if __name__ =='__main__':
 
 
 
+### TEST AND SUBMISSION ON KAGGLE:
 
 
+test = test.astype(np.float32)
+test = test/255.0
+
+#initialize:
+predicted_label = np.zeros(test.shape[0])
+
+for i in range(0,test.shape[0]/BATCH_SIZE):
+	predicted_label[i*BATCH_SIZE:(i+1)*BATCH_SIZE] = predict.eval(feed_dict=
+		{
+		x:test[i*BATCH_SIZE:(i+1)*BATCH_SIZE],
+		keep_prob : 1.0
+		})
 
 
-
+np.savetxt(
+	'/home/snowneji/Desktop/yf_sub.csv',
+	np.c_[range(1,len(test)+1),predicted_label],
+	delimiter = ',',
+	header = "ImageId,Label",
+	comments = '',
+	fmt = '%d'
+	)
 
 
 
