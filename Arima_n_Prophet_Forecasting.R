@@ -10,6 +10,7 @@ data = data[with(data, order(Date)), ]
 
 
 data = data['Price']
+#########
 data = ts(data)
 #Plot:
 plot(data)
@@ -27,6 +28,10 @@ model0 = forecast::auto.arima(tr)
 pred0 = forecast::forecast(model0,h=length(vl))
 pred0 = pred0$mean
 
+#Expo Smoothing
+model1 = forecast::ses(tr,h=length(vl))
+pred1 = forecast::forecast(model1,h=length(vl))
+pred1 = pred1$mean
 
 
 #Prophet:
@@ -39,7 +44,7 @@ data = data[,c('ds','y')]
 ntr = as.integer(nrow(data)*0.8)
 ptr = data[1:ntr,]
 pvl = data[(ntr+1):nrow(data),]
-model = prophet(ptr)
+model = prophet(ptr,growth = 'logistic')
 pred3 = predict(model,data.frame(ds=pvl$ds))
 pred3 = pred3$yhat
 pred3 = ts(pred3)
@@ -54,15 +59,15 @@ rmse = function(x,y){
 }
 print('RMSE:')
 print(rmse(as.numeric(vl),as.numeric(pred0)))
-print(rmse(as.numeric(vl),as.numeric(pred1)))
-print(rmse(as.numeric(vl),as.numeric(pred2)))
+# print(rmse(as.numeric(vl),as.numeric(pred1)))
+
 print(rmse(as.numeric(vl),as.numeric(pred3)))
 
 #plot:
 p_dat1 = data.frame(
 label = as.numeric(tr),
 arima = as.numeric(tr),
-# ets = as.numeric(tr),
+# expo_sm = as.numeric(tr),
 # nn = as.numeric(tr),
 prophet = as.numeric(tr),
 blend = as.numeric(tr) )
@@ -71,7 +76,7 @@ blend = as.numeric(tr) )
 p_dat2 = data.frame(
   label=as.numeric(vl),
   arima=as.numeric(pred0),
-  # ets=as.numeric(pred1),
+  # expo_sm=as.numeric(pred1),
   # nn=as.numeric(pred2),
   prophet=as.numeric(pred3),
   blend=(as.numeric(pred0)+as.numeric(pred3))/2
