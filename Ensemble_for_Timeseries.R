@@ -97,9 +97,7 @@ pred_ave_rpart[, Var1 := "RPART_Bagg"]
 # Plot:
 ggplot(pred_melt_rpart, aes(x=Var2, y=value, group = Var1)) +
   geom_line(alpha = 0.75) +
-  geom_line(data = pred_ave_rpart, aes(Var2, value), color = "firebrick2", alpha = 0.9, size = 2) +
-  labs(x = "Time", y = "Load (kW)", title = "Bagging with RPART") +
-  theme_ts
+  geom_line(data = pred_ave_rpart, aes(Var2, value), color = "firebrick2", alpha = 0.9, size = 2)
 
 
 

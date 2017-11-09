@@ -29,9 +29,9 @@ pred0 = forecast::forecast(model0,h=length(vl))
 pred0 = pred0$mean
 
 #Expo Smoothing
-model1 = forecast::ses(tr,h=length(vl))
-pred1 = forecast::forecast(model1,h=length(vl))
-pred1 = pred1$mean
+# model1 = forecast::ses(tr,h=length(vl))
+# pred1 = forecast::forecast(model1,h=length(vl))
+# pred1 = pred1$mean
 
 
 #Prophet:
@@ -44,24 +44,17 @@ data = data[,c('ds','y')]
 ntr = as.integer(nrow(data)*0.8)
 ptr = data[1:ntr,]
 pvl = data[(ntr+1):nrow(data),]
-model = prophet(ptr,growth = 'logistic')
+model = prophet(ptr)
 pred3 = predict(model,data.frame(ds=pvl$ds))
 pred3 = pred3$yhat
 pred3 = ts(pred3)
-#Plot:
-plot(data)
-#Split:
+
 
 #RMSE:
 rmse = function(x,y){
   return(sqrt(mean((x-y)**2)))
   
 }
-print('RMSE:')
-print(rmse(as.numeric(vl),as.numeric(pred0)))
-# print(rmse(as.numeric(vl),as.numeric(pred1)))
-
-print(rmse(as.numeric(vl),as.numeric(pred3)))
 
 #plot:
 p_dat1 = data.frame(
@@ -69,8 +62,9 @@ label = as.numeric(tr),
 arima = as.numeric(tr),
 # expo_sm = as.numeric(tr),
 # nn = as.numeric(tr),
-prophet = as.numeric(tr),
-blend = as.numeric(tr) )
+prophet = as.numeric(tr)
+# blend = as.numeric(tr) )
+)
 
 
 p_dat2 = data.frame(
@@ -78,8 +72,8 @@ p_dat2 = data.frame(
   arima=as.numeric(pred0),
   # expo_sm=as.numeric(pred1),
   # nn=as.numeric(pred2),
-  prophet=as.numeric(pred3),
-  blend=(as.numeric(pred0)+as.numeric(pred3))/2
+  prophet=as.numeric(pred3)
+  # blend=(as.numeric(pred0)+as.numeric(pred3))/2
 )
 
 
@@ -88,9 +82,13 @@ p_dat$id = seq(1:nrow(p_dat))
 d = reshape2::melt(p_dat, id="id")
 
 
-
-
-
 ggplot(data=d,
        aes(x=id, y=value, colour=variable)) +
   geom_line()
+
+print('RMSE:')
+print(rmse(as.numeric(vl),as.numeric(pred0)))
+# print(rmse(as.numeric(vl),as.numeric(pred1)))
+
+print(rmse(as.numeric(vl),as.numeric(pred3)))
+
