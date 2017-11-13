@@ -15,7 +15,7 @@ data = ts(data)
 #Plot:
 plot(data)
 #Split:
-ntr = as.integer(nrow(data)*0.8)
+ntr = 9600
 tr = data[1:ntr]
 vl = data[(ntr+1):nrow(data)]
 tr = ts(tr)
@@ -41,7 +41,6 @@ colnames(data) = c('y','ds')
 data$ds = as.POSIXct(data$ds,format='%B %d, %Y')
 data = data[with(data, order(ds)), ]
 data = data[,c('ds','y')]
-ntr = as.integer(nrow(data)*0.8)
 ptr = data[1:ntr,]
 pvl = data[(ntr+1):nrow(data),]
 model = prophet(ptr)
