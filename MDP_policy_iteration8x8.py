@@ -58,20 +58,41 @@ def policy_iteration(env, gamma = 1.0):
     for i in range(max_iterations):
         old_policy_v = compute_policy_v(env, policy, gamma)
         new_policy = extract_policy(old_policy_v, gamma)
-        if i % 2 ==0:
-            env.render()
+
         if (np.all(policy == new_policy)):
             print ('Policy-Iteration converged at step %d.' %(i+1))
             break
         policy = new_policy
-    return policy
+    return (policy,(i+1))
 
 
 if __name__ == '__main__':
     env_name  = 'FrozenLake8x8-v0'
-    env = gym.make(env_name)
-    optimal_policy = policy_iteration(env, gamma = 1.0)
-    scores = evaluate_policy(env, optimal_policy, gamma = 1.0)
-    print('Average scores = ', np.mean(scores))
+    N_ITER = 50
+
+    AVG_ROUND = []
+    AVG_TIME = []
+    AVG_SCORE = []
+
+    for i in range(N_ITER):
+        start = time.time()
+        env = gym.make(env_name)
+        res = policy_iteration(env, gamma = 1.0)
+        optimal_policy = res[0]
+        scores = evaluate_policy(env, optimal_policy, gamma = 1.0)
+
+        AVG_TIME.append(time.time()-start)
+        AVG_ROUND.append(res[1])
+        AVG_SCORE.append(scores)
+
+
+    print('Policy average time = ', np.mean(AVG_TIME))
+    print('Policy average round = ', np.mean(AVG_ROUND))
+    print('Policy average score = ', np.mean(AVG_SCORE))
+
+
+    final_res = pd.DataFrame({'time':AVG_TIME,'round':AVG_ROUND,'score':AVG_SCORE})
+
+    final_res.mean()
 
 
