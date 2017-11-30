@@ -1,3 +1,4 @@
+import numpy as np
 # For the E-step, with each sample we have
 # For the M-step, we need to find the value of θθ that maximises the QQ function
 
