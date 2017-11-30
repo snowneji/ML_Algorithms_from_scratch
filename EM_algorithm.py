@@ -1,6 +1,5 @@
 import numpy as np
-# For the E-step, with each sample we have
-# For the M-step, we need to find the value of θθ that maximises the QQ function
+
 
 xs = np.array([(5,5), (9,1), (8,2), (4,6), (7,3)])
 thetas = np.array([[0.6, 0.4], [0.5, 0.5]])
@@ -26,9 +25,8 @@ for i in range(max_iter):
         ll_B = np.sum([x*np.log(thetas[1])])
 
         # [EQN 1]
-        denom = np.exp(ll_A) + np.exp(ll_B)
-        w_A = np.exp(ll_A)/denom
-        w_B = np.exp(ll_B)/denom
+        w_A = np.exp(ll_A)/ (np.exp(ll_A) + np.exp(ll_B))
+        w_B = np.exp(ll_B)/ (np.exp(ll_A) + np.exp(ll_B))
 
         ws_A.append(w_A)
         ws_B.append(w_B)
