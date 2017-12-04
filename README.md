@@ -1,5 +1,5 @@
 # Daily Learning 
 
-## Implementing some stuff for fun:
+Implementing some stuff for later references
 
  
