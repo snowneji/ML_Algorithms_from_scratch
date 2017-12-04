@@ -1,3 +1,29 @@
+
+'''
+Refer to:
+http://ai.stanford.edu/~chuongdo/papers/em_tutorial.pdf
+https://people.duke.edu/~ccc14/sta-663/EMAlgorithm.html
+
+
+
+Pseudocode for EM algorithm:
+
+
+1. we guess/initialize the Thetas for each distribution,
+
+Repeat the following until converge:
+
+    2. E-step: Assuming thetas are correct, we use Thetas to re-estimate each data point using Thetas as the weights
+
+    3. M-step: After re-estimate each data point using Thetas, now we re-calculate the parameter Thetas based on the re-estimated data from above step
+
+'''
+
+
+
+
+
+
 import numpy as np
 
 
