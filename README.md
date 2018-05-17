@@ -1,5 +1,5 @@
-# Daily Learning 
+# Some ML Algorithm Buidling from Scratch
 
-Implementing some stuff for later references
+Implementing some stuff for learning purpose
 
  
