@@ -1,4 +1,5 @@
 .Rapp.history
 .Rhistory
+.DS_Store
 test.txt
 ./logs/
