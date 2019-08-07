@@ -2,4 +2,5 @@
 .Rhistory
 .DS_Store
 test.txt
-./logs/
+logs
+.ipynb_checkpoints
